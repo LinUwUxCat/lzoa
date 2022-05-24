@@ -28,6 +28,11 @@ int main(int argc, char *argv[]){
         return 0; //actually i have no fucking idea what i'm supposed to return. Here's a 0
     }
     
+
+
+    /**************/
+    /*   Infile   */
+    /**************/
     FILE *in = fopen(argv[2], "r"); //open the input file
     if (in == NULL) {
         printf("Error - Could not open input file.\n");
@@ -38,16 +43,11 @@ int main(int argc, char *argv[]){
     lzo_uint inlen = ftell(in);
     fseek(in, 0, SEEK_SET);
 
-    //unsigned char __LZO_MMODEL out [ inlen + inlen / 16 + 64 + 3 ]; //from the miniLZO example -> we provide additional space in case data isn't compressible
-                                                                      //TODO : Replace by a file.
     unsigned char __LZO_MMODEL *inbuf = (unsigned char *)malloc(inlen);
-    fread(inbuf, 1, inlen, in);
-    fclose(in);
-    
 
-    /****************/
-    /*    Outfile   */
-    /****************/
+    /***************/
+    /*   Outfile   */
+    /***************/
     lzo_uint outlen;
     FILE *out;
     if (argc < 4 || argv[3][0] == '-'){
@@ -65,6 +65,8 @@ int main(int argc, char *argv[]){
     /* Compression */
     /***************/
     if (argv[1][1] == 'c'){
+        fread(inbuf, 1, inlen, in);
+        fclose(in);
         unsigned char __LZO_MMODEL outbuf [ inlen + inlen / 16 + 64 + 3 ];
         r = lzo1x_1_compress(inbuf,inlen,outbuf,&outlen,wrkmem);
 
@@ -78,21 +80,29 @@ int main(int argc, char *argv[]){
         }
         fwrite("LZOX", 1, 4, out);
         fwrite(&inlen, sizeof(lzo_uint), 1, out);
+        printf("Uncompressed size : %ld\n", inlen);
+        printf("Uncompressed size : %x\n", inlen);
+        fflush(stdout);
         fwrite(outbuf, 1, outlen, out);
+        free(inbuf);
+        return 0;
     /**************/
     /* Decompress */
     /**************/
     } else {
-        r = lzo1x_decompress(inbuf,inlen,NULL,&outlen,NULL);
+        fseek(in, sizeof(char)*4, SEEK_SET); //skip the header (LZOX)
+        fread(&inlen, sizeof(lzo_uint), 1, in); //read the length of the uncompressed data. We can just reuse inlen
+        printf("Uncompressed size : %ld\n", inlen);
+        printf("Uncompressed size : %x\n", inlen);
+        fflush(stdout);
+        unsigned char __LZO_MMODEL outbuf [ inlen ];
+        fread(inbuf, 1, inlen, in);
+        fclose(in);
+        r = lzo1x_decompress(inbuf,inlen,outbuf,&outlen,NULL);
         if (r != LZO_E_OK){
             printf("Error - Decompression failed! Please open an issue on github about this. Error code : DEC-%d", r);
             return 1;
         }
     }
-
-    free(inbuf);
-   
-    fclose(out);
-    return 0;
     
 }
