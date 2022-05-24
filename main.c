@@ -78,15 +78,13 @@ int main(int argc, char *argv[]){
     /* Decompress */
     /**************/
     } else {
-        //fseek(in, sizeof(char)*4, SEEK_SET); //skip the header (LZOX)
         fread(&outlen, sizeof(char), 4, in); //reusing variables woooo
-        if (outlen != 0x584f5a4c){
+        if (outlen != 0x584f5a4c){ //=LZOX
             printf("Error - Invalid header.\n");
             return 1;
         }
-        lzo_uint newlen;
-        fread(&newlen, sizeof(lzo_uint), 1, in); //read the length of the uncompressed data
-        unsigned char __LZO_MMODEL outbuf [ newlen ];
+        fread(&outlen, sizeof(lzo_uint), 1, in); //read the length of the uncompressed data
+        unsigned char __LZO_MMODEL outbuf [ outlen ];
         fflush(stdout);
         fread(inbuf, 1, inlen, in);
         fclose(in);
