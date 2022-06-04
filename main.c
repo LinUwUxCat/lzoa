@@ -21,7 +21,7 @@ int main(int argc, char *argv[]){
         return 2; //1 is a bug in the code, here it's a compiler bug. I don't know what to return, so have a 2.
     }
     
-    if (argv[1][0] != '-' || (argc < 3 && argv[1][1]=='c') || (argv[1][1] == 'd' && argc < 4)) {
+    if (argc == 1 || argv[1][0] != '-' || (argc < 3 && argv[1][1]=='c') || (argv[1][1] == 'd' && argc < 4)) {
         printf("lzox 0.1 - by LinuxCat\nUsing miniLZO library by Markus Franz Xaver Johannes Oberhumer\nUsage: %s <OPTION> <input file> [output file]\n\nOptions : \n\t-c\tCompress input file to output file\n\t-d\tDecompress input file to output file\n\nIf no output is specified, it will be FILE_NAME.lzo if -c is used.\n", argv[0]); //congrats, you read to the end of this line! now go listen to this https://www.youtube.com/watch?v=9R80DUsixGg
         return 0; //actually i have no fucking idea what i'm supposed to return. Here's a 0
     }
