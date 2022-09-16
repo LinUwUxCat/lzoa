@@ -1,4 +1,4 @@
-# lzox
+# lzoa
 Is a lightweight LZO compression and decompression tool.
 It only supports lzo 1x_1, meaning only `lzo1x_1_compress` and `lzo1x_decompress` are used.\
 LZO1X_1 is the fastest algorithm of all LZOXX_X algorithms - see [here](https://github.com/nemequ/lzo/blob/master/doc/LZO.TXT#L74).\

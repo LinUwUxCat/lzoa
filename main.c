@@ -22,7 +22,7 @@ int main(int argc, char *argv[]){
     }
     
     if (argc == 1 || argv[1][0] != '-' || (argc < 3 && argv[1][1]=='c') || (argv[1][1] == 'd' && argc < 4)) {
-        printf("lzox 0.1 - by LinuxCat\nUsing miniLZO library by Markus Franz Xaver Johannes Oberhumer\nUsage: %s <OPTION> <input file> [output file]\n\nOptions : \n\t-c\tCompress input file to output file\n\t-d\tDecompress input file to output file\n\nIf no output is specified, it will be FILE_NAME.lzo if -c is used.\n", argv[0]); //congrats, you read to the end of this line! now go listen to this https://www.youtube.com/watch?v=9R80DUsixGg
+        printf("lzoa 0.1 - by LinuxCat\nUsing miniLZO library by Markus Franz Xaver Johannes Oberhumer\nUsage: %s <OPTION> <input file> [output file]\n\nOptions : \n\t-c\tCompress input file to output file\n\t-d\tDecompress input file to output file\n\nIf no output is specified, it will be FILE_NAME.lzo if -c is used.\n", argv[0]); //congrats, you read to the end of this line! now go listen to this https://www.youtube.com/watch?v=9R80DUsixGg
         return 0; //actually i have no fucking idea what i'm supposed to return. Here's a 0
     }
     
@@ -70,7 +70,7 @@ int main(int argc, char *argv[]){
         if (outlen >= inlen){
             printf("Note - Data is not compressible.");
         }
-        fwrite("LZOX", 1, 4, out);
+        fwrite("LZOA", 1, 4, out);
         fwrite(&inlen, sizeof(lzo_uint), 1, out);
         fwrite(outbuf, 1, outlen, out);
     /**************/
@@ -78,7 +78,7 @@ int main(int argc, char *argv[]){
     /**************/
     } else {
         fread(&outlen, sizeof(char), 4, in); //reusing variables woooo
-        if (outlen != 0x584f5a4c){ //=LZOX
+        if (outlen != 0x414f5a4c){ //=LZOA
             printf("Error - Invalid header.\n");
             return 1;
         }
