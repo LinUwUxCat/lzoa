@@ -12,6 +12,33 @@
 #define HEAP_ALLOC(var,size) lzo_align_t __LZO_MMODEL var [ ((size) + (sizeof(lzo_align_t) - 1)) / sizeof(lzo_align_t) ]
 static HEAP_ALLOC(wrkmem, LZO1X_1_MEM_COMPRESS);
 
+#include <argp.h>
+const char *argp_program_version = "lzoa 0.2";
+const char *argp_program_bug_address = "linuxcat@linuxcat.tech";
+static char doc[] = "LZOA is a command-line tool to compress and decompress LZO files using the miniLZO library by Markus Franz Xaver Johannes Oberhumer";
+static char args_doc[] = "[FILENAME]...";
+static struct argp_option options[] = {
+    {"compress", 'c', 0, 0, "compress to a lzo file"},
+    {"decompress", 'd', 0, 0, "decompress a lzo file"},
+    {"output", 'o', "FILE", 0, "output to FILE."},
+    {"parts", 'p', "NUMBER", OPTION_ARG_OPTIONAL, "split the output into X parts. They will be named using the -o option with .X extension added."},
+    { 0 }
+};
+
+//key : key for the option (e.g. c, d, o, p)
+//arg : its value (e.g. cat -c bar -> key=c arg=bar)
+//https://www.gnu.org/software/libc/manual/html_node/Argp-Parser-Functions.html
+error_t argp_parser (int key, char *arg, struct argp_state *state){
+    switch (key){
+        //this is where i do shit
+        default:
+            return ARGP_ERR_UNKNOWN;
+    }
+    return 0;
+}
+
+static struct argp argp = { options, argp_parser, args_doc, doc, 0, 0, 0 }
+
 int main(int argc, char *argv[]){
 
     int r; //result
@@ -21,11 +48,12 @@ int main(int argc, char *argv[]){
         return 2; //1 is a bug in the code, here it's a compiler bug. I don't know what to return, so have a 2.
     }
     
-    if (argc == 1 || argv[1][0] != '-' || (argc < 3 && argv[1][1]=='c') || (argv[1][1] == 'd' && argc < 4)) {
+    /*if (argc == 1 || argv[1][0] != '-' || (argc < 3 && argv[1][1]=='c') || (argv[1][1] == 'd' && argc < 4)) {
         printf("lzoa 0.1 - by LinuxCat\nUsing miniLZO library by Markus Franz Xaver Johannes Oberhumer\nUsage: %s <OPTION> <input file> [output file]\n\nOptions : \n\t-c\tCompress input file to output file\n\t-d\tDecompress input file to output file\n\nIf no output is specified, it will be FILE_NAME.lzo if -c is used.\n", argv[0]); //congrats, you read to the end of this line! now go listen to this https://www.youtube.com/watch?v=9R80DUsixGg
         return 0; //actually i have no fucking idea what i'm supposed to return. Here's a 0
-    }
+    }*/
     
+    argp_parse(argp, argc, argv, )
 
     /**************/
     /*   Infile   */
