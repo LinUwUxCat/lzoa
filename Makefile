@@ -1,5 +1,5 @@
 
-PROGRAM = lzox
+PROGRAM = lzoa
 SOURCES = main.c minilzo.c
 
 # If minilzo.h, lzoconf.h and lzodefs.h are not found, change this
