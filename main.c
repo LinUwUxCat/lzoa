@@ -90,10 +90,13 @@ int main(int argc, char *argv[]){
     fflush(stdout);
     if (infilename == NULL) return 0; //this should never happen
     if (outfilename == NULL){
-        if (verbose) printf("Outfile name not precised. Defaulting to %s.lzo\n", infilename);
-        outfilename = "test.lzo";
+        char* extension = tasktype==1?"lzo":"out";
+        if (verbose) printf("Outfile name not precised. Defaulting to %s.%s\n", infilename, extension);
+        fflush(stdout);
+        outfilename = (char *) malloc(strlen(infilename) + 5);
+        sprintf(outfilename, "%s.%s", infilename, extension);
     }
-    fflush(stdout);
+
     /**************/
     /*   Infile   */
     /**************/
