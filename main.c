@@ -87,12 +87,10 @@ int main(int argc, char *argv[]){
         default:
             return 0; //this should never happen
     }
-    fflush(stdout);
     if (infilename == NULL) return 0; //this should never happen
     if (outfilename == NULL){
         char* extension = tasktype==1?"lzo":"out";
         if (verbose) printf("Outfile name not precised. Defaulting to %s.%s\n", infilename, extension);
-        fflush(stdout);
         outfilename = (char *) malloc(strlen(infilename) + 5);
         sprintf(outfilename, "%s.%s", infilename, extension);
     }
@@ -107,7 +105,6 @@ int main(int argc, char *argv[]){
         return 1;
     }
     if (verbose) printf("Done.\n");
-    fflush(stdout);
 
     fseek(in, 0, SEEK_END);     //
     lzo_uint inlen = ftell(in); // Get file size
@@ -123,7 +120,6 @@ int main(int argc, char *argv[]){
     lzo_uint outlen;
     FILE *out;
     out = fopen(outfilename, "w");
-    fflush(stdout);
 
 
     /***************/
@@ -152,7 +148,7 @@ int main(int argc, char *argv[]){
     /* Decompress */
     /**************/
     } else { //there is 3 possible task types and we already yeet the possibilities of having 0 when we manage the args so we don't have to compare to 2 again here
-        if (verbose) printf("Startin decompression\n");
+        if (verbose) printf("Starting decompression\n");
         fread(&outlen, sizeof(char), 4, in); //reusing variables woooo
         if (outlen != 0x414f5a4c){ //=LZOA
             printf("Error - Invalid header.\n");
@@ -160,7 +156,6 @@ int main(int argc, char *argv[]){
         }
         fread(&outlen, sizeof(lzo_uint), 1, in); //read the length of the uncompressed data
         unsigned char __LZO_MMODEL outbuf [ outlen ];
-        fflush(stdout);
         fread(inbuf, 1, inlen, in);
         fclose(in);
         r = lzo1x_decompress(inbuf,inlen - sizeof(char)*4 - sizeof(lzo_uint),outbuf,&outlen,NULL); //dammit why do i need an outlen here
